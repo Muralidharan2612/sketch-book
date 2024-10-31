@@ -69,12 +69,12 @@ const Board: React.FC = () => {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
 
-    const beginPath = (x: any, y: any) => {
+    const beginPath = (x: number, y: number) => {
       context?.beginPath();
       context?.moveTo(x, y);
     };
 
-    const drawLine = (x: any, y: any) => {
+    const drawLine = (x: number, y: number) => {
       context?.lineTo(x, y);
       context?.stroke();
     };
@@ -89,7 +89,7 @@ const Board: React.FC = () => {
       drawLine(e.clientX, e.clientY);
     };
 
-    const handleMouseUp = (e: MouseEvent) => {
+    const handleMouseUp = () => {
       shouldDraw.current = false;
       const imageData = context?.getImageData(
         0,
