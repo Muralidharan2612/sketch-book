@@ -1,17 +1,13 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { COLORS, MENU_ITEMS } from "~/constant";
 
-type ToolProperty = {
+export interface ToolboxItem {
   color: string;
   size: number;
-};
+}
 
 export interface ToolboxState {
-  [MENU_ITEMS.PENCIL as string]: ToolProperty;
-  [MENU_ITEMS.ERASER as string]: ToolProperty;
-  [MENU_ITEMS.UNDO as string]?: object | null;
-  [MENU_ITEMS.REDO as string]?: object | null;
-  [MENU_ITEMS.DOWNLOAD as string]?: object | null;
+  [key: string]: ToolboxItem;
 }
 
 const initialState: ToolboxState = {
@@ -23,9 +19,9 @@ const initialState: ToolboxState = {
     color: COLORS.WHITE,
     size: 3,
   },
-  UNDO: null,
-  REDO: null,
-  DOWNLOAD: null,
+  // UNDO: null,
+  // REDO: null,
+  // DOWNLOAD: null,
 };
 
 interface ChangeColorPayload {
@@ -35,7 +31,7 @@ interface ChangeColorPayload {
 
 interface ChangeBrushSizePayload {
   item: keyof ToolboxState;
-  size: string;
+  size: number;
 }
 
 export const toolboxSlice = createSlice({
@@ -43,10 +39,22 @@ export const toolboxSlice = createSlice({
   initialState,
   reducers: {
     changeColor: (state, action: PayloadAction<ChangeColorPayload>) => {
-      state[action.payload.item].color = action.payload.color;
+      const { item, color } = action.payload;
+      if (state[item]) {
+        // Check if the item exists
+        state[item].color = color; // Update the color
+      } else {
+        console.error(`Item ${item} does not exist in state.`);
+      }
     },
     changeBrushSize: (state, action: PayloadAction<ChangeBrushSizePayload>) => {
-      state[action.payload.item].size = action.payload.size;
+      const { item, size } = action.payload;
+      if (state[item]) {
+        // Check if the item exists
+        state[item].size = size; // Update the color
+      } else {
+        console.error(`Item ${item} does not exist in state.`);
+      }
     },
   },
 });

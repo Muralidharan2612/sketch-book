@@ -19,7 +19,7 @@ export const menuSlice = createSlice({
     menuItemClick: (state, action: PayloadAction<string>) => {
       state.activeMenuItem = action.payload;
     },
-    actionItemClick: (state, action: PayloadAction<string>) => {
+    actionItemClick: (state, action: PayloadAction<string | null>) => {
       state.actionMenu = action.payload;
     },
   },

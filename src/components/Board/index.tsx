@@ -4,17 +4,18 @@ import React, { useEffect, useLayoutEffect, useRef } from "react";
 import { MENU_ITEMS } from "~/constant";
 import { useAppDispatch, useAppSelector } from "~/lib/hooks";
 import { actionItemClick } from "~/lib/slice/menuSlice";
+import { ToolboxState } from "~/lib/slice/toolbarSlice";
 
 const Board: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const shouldDraw = useRef<boolean>(false);
-  const drawHistory = useRef<[]>([]);
+  const drawHistory = useRef<ImageData[]>([]);
   const historyPointer = useRef<number>(0);
 
   const dispatch = useAppDispatch();
   const { activeMenuItem, actionMenu } = useAppSelector((state) => state.menu);
   const { color, size } = useAppSelector(
-    (state) => state.toolbox[activeMenuItem]
+    (state) => state.toolbox[activeMenuItem as keyof ToolboxState]
   );
 
   useEffect(() => {
