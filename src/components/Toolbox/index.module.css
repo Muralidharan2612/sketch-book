@@ -1,9 +1,8 @@
-.toolbarContainer {
+.toolboxContainer {
     @apply p-5 absolute top-1/4 left-5 w-64 rounded-md;
     box-shadow: theme('colors.shadow1');
     border: 1px solid theme('colors.border1');
     background-color: theme('colors.background1');
-
 
     .toolItem {
         @apply mb-5;
@@ -11,12 +10,6 @@
         .toolText {
             font-size: 11px;
             color: theme('colors.text1');
-            -webkit-user-select: none;
-            /* Safari */
-            -ms-user-select: none;
-            /* IE 10 and IE 11 */
-            user-select: none;
-            /* Standard syntax */
         }
 
         .itemContainer {
@@ -24,14 +17,19 @@
 
             .colorBox {
                 @apply h-5 w-5 mr-1 rounded-sm cursor-pointer;
-                border: 1px solid theme('colors.border1');
 
-                &:hover,
-                &.active {
+                &:hover, &.active {
                     border: 1.5px solid theme('colors.border2');
                     box-shadow: theme('colors.shadow2');
                 }
             }
         }
+    }
+
+    @media screen and (max-width: 640px) {
+        top: unset;
+        bottom: 0;
+        width: 100%;
+        left: 0;
     }
 }

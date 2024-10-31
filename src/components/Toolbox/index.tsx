@@ -11,7 +11,7 @@ import { changeBrushSize, changeColor } from "~/lib/slice/toolbarSlice";
 
 const Toolbox: React.FC = () => {
   const activeMenuItem = useAppSelector((state) => state.menu.activeMenuItem);
-  const activeColor = useAppSelector((state) => state.toolbox.PENCIL.color);
+  const activeColor = useAppSelector((state) => state.toolbox[MENU_ITEMS.PENCIL].color);
   const burshSize = useAppSelector(
     (state) => state.toolbox[activeMenuItem].size
   );
@@ -34,7 +34,7 @@ const Toolbox: React.FC = () => {
   };
 
   return (
-    <div className={styles.toolbarContainer}>
+    <div className={styles.toolboxContainer}>
       {showStrokeToolOption && (
         <div className={styles.toolItem}>
           <h4 className={styles.toolText}>Stroke Color</h4>
