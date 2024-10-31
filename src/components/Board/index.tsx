@@ -47,7 +47,8 @@ const Board: React.FC = () => {
       context?.putImageData(imageData, 0, 0);
     }
     dispatch(actionItemClick(null));
-  }, [actionMenu]);
+    
+  }, [actionMenu, dispatch]);
 
   useEffect(() => {
     if (!canvasRef.current) return;
@@ -55,8 +56,8 @@ const Board: React.FC = () => {
     const context = canvas.getContext("2d");
 
     const changeCanvaConfig = () => {
-      context.strokeStyle = color;
-      context.lineWidth = size;
+      context!.strokeStyle = color;
+      context!.lineWidth = size;
     };
 
     changeCanvaConfig();
@@ -98,7 +99,7 @@ const Board: React.FC = () => {
         canvas.width,
         canvas.height
       );
-      drawHistory.current.push(imageData);
+      drawHistory.current.push(imageData as ImageData);
       historyPointer.current = drawHistory.current.length - 1;
     };
 

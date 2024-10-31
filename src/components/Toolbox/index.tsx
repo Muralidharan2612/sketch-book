@@ -22,8 +22,11 @@ const Toolbox: React.FC = () => {
     activeMenuItem === MENU_ITEMS.PENCIL ||
     activeMenuItem === MENU_ITEMS.ERASER;
 
-  const updateBrushSize = (e: SyntheticEvent) => {
-    dispatch(changeBrushSize({ item: activeMenuItem, size: e.target.value }));
+  const updateBrushSize = (e: SyntheticEvent<HTMLInputElement>) => {
+    const target = e.target as HTMLInputElement;
+    dispatch(
+      changeBrushSize({ item: activeMenuItem, size: Number(target.value) })
+    );
   };
 
   const updateColor = (colorName: string) => {

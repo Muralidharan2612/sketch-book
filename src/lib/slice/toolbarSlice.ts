@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { COLORS, MENU_ITEMS } from "~/constant";
+import { COLORS } from "~/constant";
 
 export interface ToolboxItem {
   color: string;
