@@ -13,10 +13,10 @@
         }
 
         .itemContainer {
-            @apply flex justify-between mt-2;
+            @apply !flex !justify-between !mt-2;
 
             .colorBox {
-                @apply h-5 w-5 mr-1 rounded-sm cursor-pointer;
+                @apply !h-5 !w-5 !mr-1 !rounded-sm !cursor-pointer;
 
                 &:hover, &.active {
                     border: 1.5px solid theme('colors.border2');

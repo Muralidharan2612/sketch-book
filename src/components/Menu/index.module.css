@@ -11,7 +11,7 @@
 
         &:hover,
         &.active {
-            background-color: theme('colors.text2');
+            background-color: theme('colors.text2') !important;
         }
 
         .icon {
