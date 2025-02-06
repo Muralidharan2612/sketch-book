@@ -80,7 +80,7 @@ const Board: React.FC = () => {
     const canvas = canvasRef.current;
     const context = canvas.getContext("2d", { willReadFrequently: true });
 
-    let coord = { x: 0, y: 0 };
+    const coord = { x: 0, y: 0 };
     // let dpi = window.devicePixelRatio;
 
     canvas.width = window.innerWidth;
