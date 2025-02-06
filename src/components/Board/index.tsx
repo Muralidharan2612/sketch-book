@@ -95,7 +95,6 @@ const Board: React.FC = () => {
       context!.lineWidth = size;
       context?.putImageData(imageData, 0, 0);
       dispatch(actionItemClick(activeMenuItem));
-      debugger
       dispatch(
         changeBrushSize({ item: activeMenuItem, size: size })
       );
