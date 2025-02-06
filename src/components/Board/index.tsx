@@ -4,7 +4,9 @@ import React, { useEffect, useLayoutEffect, useRef } from "react";
 import { MENU_ITEMS } from "~/constant";
 import { useAppDispatch, useAppSelector } from "~/lib/hooks";
 import { actionItemClick } from "~/lib/slice/menuSlice";
-import { ToolboxState } from "~/lib/slice/toolbarSlice";
+import { changeBrushSize, changeColor, ToolboxState } from "~/lib/slice/toolbarSlice";
+
+import { socket } from "~/socket";
 
 const Board: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -47,20 +49,30 @@ const Board: React.FC = () => {
       context?.putImageData(imageData, 0, 0);
     }
     dispatch(actionItemClick(null));
-    
+
   }, [actionMenu, dispatch]);
 
   useEffect(() => {
+    socket.on("connect", () => {
+      console.log(socket.connected);
+
+      // console.log('client connected'); // x8WIv7-mJelg7on_ALbx
+    });
     if (!canvasRef.current) return;
     const canvas = canvasRef.current;
     const context = canvas.getContext("2d");
 
-    const changeCanvaConfig = () => {
+
+    const changeCanvasConfig = () => {
       context!.strokeStyle = color;
       context!.lineWidth = size;
     };
+    changeCanvasConfig();
 
-    changeCanvaConfig();
+    // const imageData = drawHistory.current[drawHistory.current.length - 1];
+    // if (!imageData) return;
+    // context?.putImageData(imageData, 0, 0);
+
   }, [color, size]);
 
   useLayoutEffect(() => {
@@ -68,31 +80,82 @@ const Board: React.FC = () => {
     const canvas = canvasRef.current;
     const context = canvas.getContext("2d", { willReadFrequently: true });
 
+    let coord = { x: 0, y: 0 };
+    // let dpi = window.devicePixelRatio;
+
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
 
-    const beginPath = (x: number, y: number) => {
-      context?.beginPath();
-      context?.moveTo(x, y);
+    const resize = () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      const imageData = drawHistory.current[drawHistory.current.length - 1];
+      if (!imageData) return;
+      context!.strokeStyle = color;
+      context!.lineWidth = size;
+      context?.putImageData(imageData, 0, 0);
+      dispatch(actionItemClick(activeMenuItem));
+      debugger
+      dispatch(
+        changeBrushSize({ item: activeMenuItem, size: size })
+      );
+      dispatch(changeColor({ item: activeMenuItem, color: color }));
     };
 
-    const drawLine = (x: number, y: number) => {
-      context?.lineTo(x, y);
+    const reposition = (event: TouchEvent | MouseEvent) => {
+      event.preventDefault();
+
+      if (event.type.startsWith("touch")) {
+        const touchEvent = event as TouchEvent;
+        const touches = touchEvent?.changedTouches;
+
+        for (let index = 0; index < touches.length; index++) {
+          coord.x = touches[index].clientX - canvas.offsetLeft;
+          coord.y = touches[index].clientY - canvas.offsetTop;
+        }
+      } else if (event.type.startsWith("mouse")) {
+        const mouseEvent = event as MouseEvent;
+
+        coord.x = mouseEvent.clientX - canvas.offsetLeft;
+        coord.y = mouseEvent.clientY - canvas.offsetTop;
+      }
+    };
+
+    const drawLine = (event: TouchEvent | MouseEvent) => {
+      if (!shouldDraw.current) return;
+      event.preventDefault();
+
+      context!.lineJoin = 'round';
+      context!.lineCap = 'round';
+      context?.beginPath();
+      context?.moveTo(coord.x, coord.y);
+
+      // Update coordinates
+      reposition(event);
+
+      context?.closePath();
+      context?.lineTo(coord.x, coord.y);
       context?.stroke();
     };
 
-    const handleMouseDown = (e: MouseEvent) => {
+    const handleTouchStart = (e: TouchEvent) => {
+      e.preventDefault();
       shouldDraw.current = true;
-      beginPath(e.clientX, e.clientY);
+      canvas.addEventListener("touchmove", drawLine);
+      reposition(e);
     };
 
-    const handleMouseMove = (e: MouseEvent) => {
-      if (!shouldDraw.current) return;
-      drawLine(e.clientX, e.clientY);
+    const handleMouseDown = (e: MouseEvent) => {
+      e.preventDefault();
+      shouldDraw.current = true;
+      canvas.addEventListener("mousemove", drawLine);
+      socket.emit('drawLine', e);
+      reposition(e);
     };
 
-    const handleMouseUp = () => {
+    const handleTouchEnd = () => {
       shouldDraw.current = false;
+      canvas.removeEventListener("touchmove", drawLine);
       const imageData = context?.getImageData(
         0,
         0,
@@ -103,14 +166,33 @@ const Board: React.FC = () => {
       historyPointer.current = drawHistory.current.length - 1;
     };
 
+    const handleMouseUp = () => {
+      shouldDraw.current = false;
+      canvas.removeEventListener("mousemove", drawLine);
+      const imageData = context?.getImageData(
+        0,
+        0,
+        canvas.width,
+        canvas.height
+      );
+      drawHistory.current.push(imageData as ImageData);
+      historyPointer.current = drawHistory.current.length - 1;
+    };
+
+    canvas.addEventListener("touchstart", handleTouchStart);
     canvas.addEventListener("mousedown", handleMouseDown);
-    canvas.addEventListener("mousemove", handleMouseMove);
     canvas.addEventListener("mouseup", handleMouseUp);
+    canvas.addEventListener("touchend", handleTouchEnd);
+    window.addEventListener("resize", resize);
+
+
 
     return () => {
+      window.removeEventListener("resize", resize);
       canvas.removeEventListener("mousedown", handleMouseDown);
-      canvas.removeEventListener("mousemove", handleMouseMove);
       canvas.removeEventListener("mouseup", handleMouseUp);
+      canvas.removeEventListener("touchstart", handleTouchStart);
+      canvas.removeEventListener("touchend", handleTouchEnd);
     };
   }, []);
 

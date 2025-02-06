@@ -12,7 +12,7 @@ import { changeBrushSize, changeColor } from "~/lib/slice/toolbarSlice";
 const Toolbox: React.FC = () => {
   const activeMenuItem = useAppSelector((state) => state.menu.activeMenuItem);
   const activeColor = useAppSelector((state) => state.toolbox[MENU_ITEMS.PENCIL].color);
-  const burshSize = useAppSelector(
+  const brushSize = useAppSelector(
     (state) => state.toolbox[activeMenuItem].size
   );
 
@@ -93,6 +93,15 @@ const Toolbox: React.FC = () => {
                 updateColor(COLORS.BLACK);
               }}
             />
+            <div
+              className={cx(styles.colorBox, {
+                [styles.active]: activeColor === COLORS.LIGHT_BLUE,
+              })}
+              style={{ backgroundColor: COLORS.LIGHT_BLUE }}
+              onClick={() => {
+                updateColor(COLORS.LIGHT_BLUE);
+              }}
+            />
           </div>
         </div>
       )}
@@ -105,7 +114,7 @@ const Toolbox: React.FC = () => {
               min="1"
               max="10"
               step="1"
-              value={burshSize}
+              value={brushSize}
               onChange={updateBrushSize}
             />
           </div>

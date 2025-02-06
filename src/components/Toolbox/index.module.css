@@ -5,7 +5,7 @@
     background-color: theme('colors.background1');
 
     .toolItem {
-        @apply mb-5;
+        @apply mb-5 !select-none;
 
         .toolText {
             font-size: 11px;

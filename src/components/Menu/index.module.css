@@ -8,15 +8,16 @@
     .iconWrapper {
         @apply cursor-pointer flex justify-center items-center h-10 w-10 rounded-md;
 
-
-        &:hover,
-        &.active {
+        &:hover, &.active {
             background-color: theme('colors.text2') !important;
         }
-
         .icon {
             color: theme('colors.text1');
             font-size: 20px;
         }
+    }
+
+    @media screen and (max-width: 640px) {
+        @apply w-3/4;
     }
 }

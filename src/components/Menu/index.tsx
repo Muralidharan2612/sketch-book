@@ -23,7 +23,7 @@ const Menu: React.FC = () => {
     dispatch(menuItemClick(menuItem));
   };
 
-  const handeMenuActionClick = (menuAction: string) => {
+  const handleMenuActionClick = (menuAction: string) => {
     dispatch(actionItemClick(menuAction));
   };
 
@@ -48,7 +48,7 @@ const Menu: React.FC = () => {
       <div
         className={styles.iconWrapper}
         onClick={() => {
-          handeMenuActionClick(MENU_ITEMS.UNDO);
+          handleMenuActionClick(MENU_ITEMS.UNDO);
         }}
       >
         <FaArrowRotateLeft className={styles.icon} />
@@ -56,7 +56,7 @@ const Menu: React.FC = () => {
       <div
         className={styles.iconWrapper}
         onClick={() => {
-          handeMenuActionClick(MENU_ITEMS.REDO);
+          handleMenuActionClick(MENU_ITEMS.REDO);
         }}
       >
         <FaArrowRotateRight className={styles.icon} />
@@ -64,7 +64,7 @@ const Menu: React.FC = () => {
       <div
         className={styles.iconWrapper}
         onClick={() => {
-          handeMenuActionClick(MENU_ITEMS.DOWNLOAD);
+          handleMenuActionClick(MENU_ITEMS.DOWNLOAD);
         }}
       >
         <FaFileArrowDown className={styles.icon} />
